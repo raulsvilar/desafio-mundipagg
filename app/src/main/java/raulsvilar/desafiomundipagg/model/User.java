@@ -13,6 +13,7 @@ public class User {
     private String expiresIn;
     private String username;
     private String customerKey;
+    private String password;
 
     public String getName() {
         return name;
@@ -68,5 +69,13 @@ public class User {
 
     public void setCustomerKey(String customerKey) {
         this.customerKey = customerKey;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

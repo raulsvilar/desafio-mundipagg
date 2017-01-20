@@ -7,7 +7,7 @@ import raulsvilar.desafiomundipagg.model.User;
 
 public class UserViewModel extends BaseObservable {
 
-    User mUser;
+    private User mUser;
 
     @Bindable
     public String getUserName() {

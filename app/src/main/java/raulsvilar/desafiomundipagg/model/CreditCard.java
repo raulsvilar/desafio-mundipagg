@@ -7,7 +7,7 @@ package raulsvilar.desafiomundipagg.model;
 public class CreditCard {
 
     private String number;
-    private String printedName;
+    private String holderName;
     private int expMonth;
     private int expYear;
     private String brand;
@@ -21,11 +21,11 @@ public class CreditCard {
     }
 
     public String getPrinted_name() {
-        return printedName;
+        return holderName;
     }
 
     public void setPrinted_name(String printed_name) {
-        this.printedName = printed_name;
+        this.holderName = printed_name;
     }
 
     public int getExpMonth() {
