@@ -25,7 +25,7 @@ android {
 
     gradle.projectsEvaluated {
         tasks.withType(JavaCompile) {
-            options.compilerArgs << "-Xmaxerrs" << "500" // or whatever number you want
+            options.compilerArgs << "-Xmaxerrs" << "500"
         }
 
     }
@@ -51,4 +51,7 @@ dependencies {
     //Dagger
     compile 'com.google.dagger:dagger:2.8'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.8'
+
+    //Play Services
+    compile 'com.google.android.gms:play-services-auth:10.0.1'
 }

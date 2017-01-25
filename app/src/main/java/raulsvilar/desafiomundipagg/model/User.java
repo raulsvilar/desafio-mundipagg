@@ -1,14 +1,16 @@
 package raulsvilar.desafiomundipagg.model;
 
+import com.google.gson.annotations.SerializedName;
+
 public class User {
 
     private String name;
+    @SerializedName(value="email", alternate = "username")
     private String email;
     private String company;
     private String refreshToken;
     private String accessToken;
     private int expiresIn;
-    private String username;
     private String customerKey;
     private String password;
 
@@ -52,14 +54,6 @@ public class User {
         this.expiresIn = expiresIn;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public String getCustomerKey() {
         return customerKey;
     }
@@ -92,9 +86,8 @@ public class User {
                 "Refresh Token: %s\n" +
                 "Access Token: %s\n" +
                 "Expires in: %d\n" +
-                "Username: %s\n" +
                 "Customer Key: %s", this.getName(), this.getEmail(), this.getCompany(),
                 this.getRefreshToken(), this.getAccessToken(), this.getExpiresIn(),
-                this.getUsername(), this.getCustomerKey());
+                this.getCustomerKey());
     }
 }
