@@ -5,7 +5,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:name="raulsvilar.desafiomundipagg.view.fragments.SignUpFragment"
+    android:name="raulsvilar.desafiomundipagg.view.fragments.SignInFragment"
     tools:layout="@layout/fragment_sign_up">
 </fragment>
 

@@ -142,4 +142,33 @@ public class UserViewModel extends BaseObservable {
         });
     }
 
+    public void authenticateUser() {
+        setLoading(true);
+        Log.d(TAG, mUser.toString());
+        userService.loginWithCredentials(mUser).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                Log.d(TAG, new Gson().toJson(mUser));
+                setLoading(false);
+                if (response.code() < 204) {
+                    mUser = response.body();
+                    Log.d(TAG, response.body().toString());
+                }
+
+                if (response.code() >= 400) {
+                    try {
+                        Log.e(TAG, response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else Log.d(TAG, response.body().toString());
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+
+            }
+        });
+    }
+
 }
