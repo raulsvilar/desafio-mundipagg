@@ -9,5 +9,5 @@ import raulsvilar.desafiomundipagg.viewmodel.UserViewModel;
 
 @Component(modules = {AppModule.class})
 public interface AppComponet {
-    public void inject(UserViewModel signUpFragment);
+    public void inject(UserViewModel userViewModel);
 }

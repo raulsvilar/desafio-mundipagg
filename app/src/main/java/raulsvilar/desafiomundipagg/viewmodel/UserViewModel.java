@@ -1,26 +1,11 @@
 package raulsvilar.desafiomundipagg.viewmodel;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.IntentSender;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.android.databinding.library.baseAdapters.BR;
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.credentials.Credential;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.Result;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.ResultCallbacks;
-import com.google.android.gms.common.api.Status;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -34,9 +19,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-
-import static raulsvilar.desafiomundipagg.view.fragments.SignUpFragment.RC_SAVE;
 
 public class UserViewModel extends BaseObservable {
     private String TAG = getClass().getSimpleName();
@@ -44,11 +26,17 @@ public class UserViewModel extends BaseObservable {
     private UserService userService;
     @Inject User mUser;
     private boolean loading;
-    private OnRegisterUserListener mCallback;
+    private OnRegisterUserListener mRegisterCallback;
+    private OnAuthenticateUserListener mAuthenticateCallback;
 
     public interface OnRegisterUserListener {
         void registerUserFailed();
         void registerUserSuccess();
+    }
+
+    public interface OnAuthenticateUserListener {
+        void authenticateUserFailed(int code);
+        void authenticateUserSuccess(int code);
     }
 
     public UserViewModel() {
@@ -57,7 +45,11 @@ public class UserViewModel extends BaseObservable {
     }
 
     public void setOnRegisterUserListener(@NonNull OnRegisterUserListener listener) {
-        mCallback = listener;
+        mRegisterCallback = listener;
+    }
+
+    public void setOnAuthenticateUserListener(@NonNull OnAuthenticateUserListener listener) {
+        mAuthenticateCallback = listener;
     }
 
     @Bindable
@@ -122,7 +114,7 @@ public class UserViewModel extends BaseObservable {
                     response.body().setPassword(mUser.getPassword());
                     mUser = response.body();
                     Log.d(TAG, response.body().toString());
-                    mCallback.registerUserSuccess();
+                    mRegisterCallback.registerUserSuccess();
                 }
 
                 if (response.code() >= 400) {
@@ -137,7 +129,7 @@ public class UserViewModel extends BaseObservable {
             @Override
             public void onFailure(Call<User> call, Throwable t) {
                 Log.e(TAG, "Falhou", t);
-                mCallback.registerUserFailed();
+                mRegisterCallback.registerUserFailed();
             }
         });
     }
@@ -150,23 +142,17 @@ public class UserViewModel extends BaseObservable {
             public void onResponse(Call<User> call, Response<User> response) {
                 Log.d(TAG, new Gson().toJson(mUser));
                 setLoading(false);
-                if (response.code() < 204) {
+                if (response.code() <= 201) {
                     mUser = response.body();
+                    Log.d(TAG, response.body().toString());
+                } else mAuthenticateCallback.authenticateUserFailed(response.code());
                     Log.d(TAG, response.body().toString());
                 }
 
-                if (response.code() >= 400) {
-                    try {
-                        Log.e(TAG, response.errorBody().string());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else Log.d(TAG, response.body().toString());
-            }
-
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-
+                setLoading(false);
+                mAuthenticateCallback.authenticateUserFailed(503);
             }
         });
     }

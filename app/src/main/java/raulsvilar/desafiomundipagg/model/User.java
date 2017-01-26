@@ -1,12 +1,15 @@
 package raulsvilar.desafiomundipagg.model;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class User {
 
     private String name;
-    @SerializedName(value="username", alternate = "email")
+    @SerializedName(value="email", alternate = "username")
     private String email;
+    @Expose(deserialize = false)
+    private String username;
     private String company;
     private String refreshToken;
     private String accessToken;
@@ -23,11 +26,12 @@ public class User {
     }
 
     public String getEmail() {
-        return email;
+        return email != null ? email : username;
     }
 
     public void setEmail(String email) {
         this.email = email;
+        this.username = email;
     }
 
     public String getRefreshToken() {
