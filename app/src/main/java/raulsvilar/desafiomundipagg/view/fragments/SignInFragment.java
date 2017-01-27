@@ -48,6 +48,7 @@ public class SignInFragment extends Fragment implements UserViewModel.OnAuthenti
     public void authenticateUserFailed(int code) {
         switch (code) {
             case 400:
+                showAlert("Falha no login", "Usuário e senha são campos obrigatórios.");
                 break;
             case 401:
                 showAlert("Falha no login", "Usuário e/ou senha inválidos.");

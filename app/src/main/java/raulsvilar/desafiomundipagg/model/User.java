@@ -1,14 +1,9 @@
 package raulsvilar.desafiomundipagg.model;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
-
 public class User {
 
     private String name;
-    @SerializedName(value="email", alternate = "username")
     private String email;
-    @Expose(deserialize = false)
     private String username;
     private String company;
     private String refreshToken;

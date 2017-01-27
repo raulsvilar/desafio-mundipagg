@@ -146,8 +146,7 @@ public class UserViewModel extends BaseObservable {
                     mUser = response.body();
                     Log.d(TAG, response.body().toString());
                 } else mAuthenticateCallback.authenticateUserFailed(response.code());
-                    Log.d(TAG, response.body().toString());
-                }
+            }
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
