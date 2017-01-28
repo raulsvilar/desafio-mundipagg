@@ -28,7 +28,7 @@ import raulsvilar.desafiomundipagg.viewmodel.UserViewModel;
 public class SignUpFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, UserViewModel.OnRegisterUserListener {
 
-    public static final int RC_SAVE = 903;
+    private static final int RC_SAVE = 903;
     private final String TAG = getClass().getSimpleName();
 
     private FragmentSignUpBinding mBinding;
