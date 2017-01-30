@@ -7,12 +7,16 @@ import java.util.Map;
 import raulsvilar.desafiomundipagg.model.MerchantsResponse;
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
+import retrofit2.http.Headers;
 import retrofit2.http.Path;
 import retrofit2.http.QueryMap;
 
 public interface MerchantService {
     @GET("{customerKey}/merchants")
+    @Headers("Issandboxenabled: true")
     Call<MerchantsResponse> searchMerchant(
             @Path("customerKey") @NonNull String customerKey,
+            @Header("Authorization") String token,
             @QueryMap Map<String, String> options);
 }
