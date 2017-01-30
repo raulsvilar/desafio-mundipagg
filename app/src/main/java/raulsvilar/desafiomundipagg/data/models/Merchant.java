@@ -1,9 +1,12 @@
-package raulsvilar.desafiomundipagg.model;
+package raulsvilar.desafiomundipagg.data.models;
+
+import org.parceler.Parcel;
 
 /**
  * Created by raulsvilar on 20/01/17.
  */
 
+@Parcel
 public class Merchant {
     private String merchantKey;
     private String publicMerchantKey;

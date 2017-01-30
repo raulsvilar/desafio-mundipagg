@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 
 import java.util.Map;
 
-import raulsvilar.desafiomundipagg.model.MerchantsResponse;
+import raulsvilar.desafiomundipagg.data.responses.MerchantsResponse;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Header;

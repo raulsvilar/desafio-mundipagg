@@ -2,7 +2,7 @@ package raulsvilar.desafiomundipagg.service;
 
 import java.util.Map;
 
-import raulsvilar.desafiomundipagg.model.User;
+import raulsvilar.desafiomundipagg.data.models.User;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.POST;

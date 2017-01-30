@@ -1,8 +1,7 @@
-package raulsvilar.desafiomundipagg.viewmodel;
+package raulsvilar.desafiomundipagg.viewmodels;
 
 import android.databinding.BaseObservable;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.util.HashMap;
@@ -12,8 +11,8 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import raulsvilar.desafiomundipagg.App;
-import raulsvilar.desafiomundipagg.model.Merchant;
-import raulsvilar.desafiomundipagg.model.MerchantsResponse;
+import raulsvilar.desafiomundipagg.data.models.Merchant;
+import raulsvilar.desafiomundipagg.data.responses.MerchantsResponse;
 import raulsvilar.desafiomundipagg.service.MerchantService;
 import retrofit2.Call;
 import retrofit2.Callback;

@@ -1,4 +1,4 @@
-package raulsvilar.desafiomundipagg.viewmodel;
+package raulsvilar.desafiomundipagg.viewmodels;
 
 import android.content.SharedPreferences;
 import android.databinding.BaseObservable;
@@ -14,7 +14,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import raulsvilar.desafiomundipagg.App;
-import raulsvilar.desafiomundipagg.model.User;
+import raulsvilar.desafiomundipagg.data.models.User;
 import raulsvilar.desafiomundipagg.service.UserService;
 import retrofit2.Call;
 import retrofit2.Callback;

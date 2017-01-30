@@ -1,4 +1,4 @@
-package raulsvilar.desafiomundipagg.model;
+package raulsvilar.desafiomundipagg.data.models;
 
 public class User {
 

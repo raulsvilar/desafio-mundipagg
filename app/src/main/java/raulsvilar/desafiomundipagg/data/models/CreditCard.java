@@ -1,4 +1,4 @@
-package raulsvilar.desafiomundipagg.model;
+package raulsvilar.desafiomundipagg.data.models;
 
 /**
  * Created by raulsvilar on 19/01/17.

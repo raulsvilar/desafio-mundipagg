@@ -1,4 +1,4 @@
-package raulsvilar.desafiomundipagg.view.fragments;
+package raulsvilar.desafiomundipagg.views.fragments;
 
 
 import android.databinding.DataBindingUtil;
@@ -12,25 +12,35 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.parceler.Parcels;
+
 import java.util.List;
 
+import javax.inject.Inject;
+
+import raulsvilar.desafiomundipagg.App;
 import raulsvilar.desafiomundipagg.R;
-import raulsvilar.desafiomundipagg.adapters.MerchantAdapter;
+import raulsvilar.desafiomundipagg.Utils;
+import raulsvilar.desafiomundipagg.views.adapters.MerchantAdapter;
 import raulsvilar.desafiomundipagg.databinding.FragmentListMerchantsBinding;
-import raulsvilar.desafiomundipagg.model.Merchant;
-import raulsvilar.desafiomundipagg.viewmodel.MerchantViewModel;
+import raulsvilar.desafiomundipagg.data.models.Merchant;
+import raulsvilar.desafiomundipagg.viewmodels.MerchantViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class ListMerchantsFragment extends Fragment
-        implements MerchantViewModel.OnMerchantsListener{
+        implements MerchantViewModel.OnMerchantsListener, MerchantAdapter.OnMerchantSelected{
 
     private static final String CUSTOMER_KEY = "customer_key";
     private static final String ACCESS_TOKEN = "access_token";
+    private static final String MERCHANTS_SAVED = "merchants_saved";
+
+    private String accessToken;
+    private String customerKey;
 
     private FragmentListMerchantsBinding mBinding;
-    private MerchantAdapter mAdapter;
+    @Inject MerchantAdapter mAdapter;
     private final String TAG = getClass().getSimpleName();
 
     public ListMerchantsFragment() {
@@ -48,6 +58,26 @@ public class ListMerchantsFragment extends Fragment
         return fragment;
     }
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        App.getComponent().inject(this);
+        if (getArguments() != null) {
+            accessToken = getArguments().getString(ACCESS_TOKEN);
+            customerKey = getArguments().getString(CUSTOMER_KEY);
+        }
+        if (savedInstanceState != null) {
+            mAdapter.addMerchants(
+                    (List<Merchant>) Parcels.unwrap(
+                            savedInstanceState.getParcelable(MERCHANTS_SAVED)));
+        } else {
+            mAdapter.setOnMerchantSelected(this);
+            MerchantViewModel merchantViewModel = new MerchantViewModel();
+            merchantViewModel.setOnMerchantsListener(this);
+            merchantViewModel.searchMerchants(customerKey, accessToken, "");
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -59,25 +89,27 @@ public class ListMerchantsFragment extends Fragment
         mBinding.recyclerView.setHasFixedSize(true);
         mBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mBinding.recyclerView.setAdapter(mAdapter);
-        MerchantViewModel merchantViewModel = new MerchantViewModel();
-        merchantViewModel.setOnMerchantsListener(this);
-        merchantViewModel.searchMerchants(getArguments().getString(CUSTOMER_KEY), getArguments().getString(ACCESS_TOKEN), "");
         return mBinding.getRoot();
     }
 
     @Override
     public void onGetMerchantsSuccess(List<Merchant> merchants) {
-        for (Merchant m : merchants) {
-            Log.d(TAG, m.getCorporateName());
-        }
+        mAdapter.addMerchants(merchants);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(MERCHANTS_SAVED, Parcels.wrap(mAdapter.getMerchants()));
+        super.onSaveInstanceState(outState);
     }
 
     @Override
     public void onGetMerchantsFailed(int code) {
         Log.e(TAG, "Erro: "+code);
-//        switch (code) {
-//            case 201:
-//                break;
-//        }
+    }
+
+    @Override
+    public void onSelected(String merchantKey) {
+        Utils.changeFragment(getFragmentManager(), R.id.container, new TransactionFragment(), false, null);
     }
 }

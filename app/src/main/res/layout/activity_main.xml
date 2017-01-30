@@ -15,7 +15,7 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="raulsvilar.desafiomundipagg.MainActivity">
+    tools:context="raulsvilar.desafiomundipagg.views.activities.MainActivity">
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="0dp"

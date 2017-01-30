@@ -1,4 +1,4 @@
-package raulsvilar.desafiomundipagg.view.fragments;
+package raulsvilar.desafiomundipagg.views.fragments;
 
 
 import android.databinding.DataBindingUtil;
@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import raulsvilar.desafiomundipagg.R;
 import raulsvilar.desafiomundipagg.Utils;
 import raulsvilar.desafiomundipagg.databinding.FragmentSignInBinding;
-import raulsvilar.desafiomundipagg.viewmodel.UserViewModel;
+import raulsvilar.desafiomundipagg.viewmodels.UserViewModel;
 
 
 public class SignInFragment extends Fragment implements UserViewModel.OnUserListener,
@@ -59,21 +59,16 @@ public class SignInFragment extends Fragment implements UserViewModel.OnUserList
 
     @Override
     public void onSuccess(String customerKey, String accessToken) {
-        getFragmentManager()
-                .beginTransaction()
-                .replace(R.id.container, ListMerchantsFragment.newInstance(customerKey, accessToken))
-                .commit();
+        Utils.changeFragment(getFragmentManager(), R.id.container,
+                ListMerchantsFragment.newInstance(customerKey, accessToken), false, null);
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.button3:
-                getFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.container, SignUpFragment.newInstance())
-                        .addToBackStack("SignInFragment")
-                        .commit();
+                Utils.changeFragment(getFragmentManager(), R.id.container,
+                        SignUpFragment.newInstance(), true, "SignInFragment");
                 break;
         }
     }

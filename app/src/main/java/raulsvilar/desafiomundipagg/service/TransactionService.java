@@ -3,6 +3,11 @@ package raulsvilar.desafiomundipagg.service;
 
 //https://sandbox.mundipaggone.com/Sale
 
+import raulsvilar.desafiomundipagg.data.models.Transaction;
+import retrofit2.Call;
+import retrofit2.http.Body;
+import retrofit2.http.POST;
+
 /*
     {
     "CreditCardTransactionCollection": [
@@ -26,6 +31,6 @@ package raulsvilar.desafiomundipagg.service;
 
 */
 public interface TransactionService {
-    //@POST
-    //Call<> sendTransaction(@Body Transaction transaction);
+    @POST
+    Call<Transaction> sendTransaction(@Body Transaction transaction);
 }

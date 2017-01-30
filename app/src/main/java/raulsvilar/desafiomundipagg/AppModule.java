@@ -7,12 +7,11 @@ import android.preference.PreferenceManager;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Singleton;
-
 import dagger.Module;
 import dagger.Provides;
-import raulsvilar.desafiomundipagg.model.Merchant;
-import raulsvilar.desafiomundipagg.model.User;
+import raulsvilar.desafiomundipagg.views.adapters.MerchantAdapter;
+import raulsvilar.desafiomundipagg.data.models.Merchant;
+import raulsvilar.desafiomundipagg.data.models.User;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -52,5 +51,10 @@ public class AppModule {
     @Provides
     public List<Merchant> provideMerchantsDataset() {
         return new ArrayList<>();
+    }
+
+    @Provides
+    public MerchantAdapter provideMerchantAdapter() {
+        return new MerchantAdapter();
     }
 }
