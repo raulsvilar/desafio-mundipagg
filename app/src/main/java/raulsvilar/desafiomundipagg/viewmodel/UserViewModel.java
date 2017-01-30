@@ -1,14 +1,15 @@
 package raulsvilar.desafiomundipagg.viewmodel;
 
+import android.content.SharedPreferences;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.android.databinding.library.baseAdapters.BR;
-import com.google.gson.Gson;
 
-import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -20,36 +21,51 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class UserViewModel extends BaseObservable {
+public class UserViewModel extends BaseObservable implements Callback<User>{
+
+    private final static String REFRESH_TOKEN = "refresh_token";
+
     private String TAG = getClass().getSimpleName();
     @Inject Retrofit retrofit;
+    @Inject SharedPreferences sharedPreferences;
     private UserService userService;
     @Inject User mUser;
     private boolean loading;
-    private OnRegisterUserListener mRegisterCallback;
-    private OnAuthenticateUserListener mAuthenticateCallback;
+    private boolean withRefresh;
+    private OnUserListener mCallback;
 
-    public interface OnRegisterUserListener {
-        void registerUserFailed();
-        void registerUserSuccess();
+    @Override
+    public void onResponse(Call<User> call, Response<User> response) {
+        setLoading(false);
+        if (response.code() <= 204) {
+            mUser = response.body();
+            sharedPreferences.edit().putString(REFRESH_TOKEN, mUser.getRefreshToken()).apply();
+            Log.d(TAG, response.body().toString());
+            mCallback.onSuccess(mUser.getCustomerKey(), mUser.getAccessToken());
+        } else if (!withRefresh) {
+            mCallback.onFailed(response.code());
+        } else withRefresh = false;
     }
 
-    public interface OnAuthenticateUserListener {
-        void authenticateUserFailed(int code);
-        void authenticateUserSuccess(int code);
+    @Override
+    public void onFailure(Call<User> call, Throwable t) {
+        setLoading(false);
+        mCallback.onFailed(503);
+    }
+
+    public interface OnUserListener {
+        void onFailed(int code);
+        void onSuccess(String customerKey, String accessToken);
     }
 
     public UserViewModel() {
         App.getComponent().inject(this);
         userService = retrofit.create(UserService.class);
+        restoreUser();
     }
 
-    public void setOnRegisterUserListener(@NonNull OnRegisterUserListener listener) {
-        mRegisterCallback = listener;
-    }
-
-    public void setOnAuthenticateUserListener(@NonNull OnAuthenticateUserListener listener) {
-        mAuthenticateCallback = listener;
+    public void setOnUserListener(@NonNull OnUserListener listener) {
+        mCallback = listener;
     }
 
     @Bindable
@@ -105,55 +121,24 @@ public class UserViewModel extends BaseObservable {
     public void registerUser() {
         Log.d(TAG, mUser.toString());
         setLoading(true);
-        userService.createUser(mUser).enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                Log.d(TAG, new Gson().toJson(mUser));
-                setLoading(false);
-                if (response.code() < 204) {
-                    response.body().setPassword(mUser.getPassword());
-                    mUser = response.body();
-                    Log.d(TAG, response.body().toString());
-                    mRegisterCallback.registerUserSuccess();
-                }
+        userService.createUser(mUser).enqueue(this);
+    }
 
-                if (response.code() >= 400) {
-                    try {
-                        Log.e(TAG, response.errorBody().string());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else Log.d(TAG, response.body().toString());
-            }
-
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                Log.e(TAG, "Falhou", t);
-                mRegisterCallback.registerUserFailed();
-            }
-        });
+    public void restoreUser() {
+        String refresh = sharedPreferences.getString(REFRESH_TOKEN, null);
+        if (refresh != null) {
+            setLoading(true);
+            withRefresh = true;
+            Map<String, String> map = new HashMap<>();
+            map.put("refreshToken", refresh);
+            userService.loginWithRefreshToken(map).enqueue(this);
+        }
     }
 
     public void authenticateUser() {
         setLoading(true);
         Log.d(TAG, mUser.toString());
-        userService.loginWithCredentials(mUser).enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                Log.d(TAG, new Gson().toJson(mUser));
-                setLoading(false);
-                if (response.code() <= 201) {
-                    mUser = response.body();
-                    Log.d(TAG, response.body().toString());
-                } else mAuthenticateCallback.authenticateUserFailed(response.code());
-            }
-
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                setLoading(false);
-                mAuthenticateCallback.authenticateUserFailed(503);
-            }
-        });
+        userService.loginWithCredentials(mUser).enqueue(this);
     }
 
 }

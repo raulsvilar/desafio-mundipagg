@@ -3,6 +3,7 @@ package raulsvilar.desafiomundipagg.view.fragments;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -18,15 +19,15 @@ import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.credentials.Credential;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResolvingResultCallbacks;
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 
 import raulsvilar.desafiomundipagg.R;
+import raulsvilar.desafiomundipagg.Utils;
 import raulsvilar.desafiomundipagg.databinding.FragmentSignUpBinding;
 import raulsvilar.desafiomundipagg.viewmodel.UserViewModel;
 
-public class SignUpFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, UserViewModel.OnRegisterUserListener {
+public class SignUpFragment extends Fragment implements UserViewModel.OnUserListener {
 
     private static final int RC_SAVE = 903;
     private final String TAG = getClass().getSimpleName();
@@ -41,19 +42,7 @@ public class SignUpFragment extends Fragment implements GoogleApiClient.Connecti
 
     public static SignUpFragment newInstance() {
         SignUpFragment fragment = new SignUpFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
         return fragment;
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        mCredentialsClient =  new GoogleApiClient.Builder(getActivity())
-                .addConnectionCallbacks(this)
-                .enableAutoManage(getActivity(), this)
-                .addApi(Auth.CREDENTIALS_API)
-                .build();
     }
 
     @Override
@@ -61,66 +50,28 @@ public class SignUpFragment extends Fragment implements GoogleApiClient.Connecti
                              Bundle savedInstanceState) {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_sign_up, container, false);
         mBinding.setUserVM(new UserViewModel());
-        mBinding.getUserVM().setOnRegisterUserListener(this);
+        mBinding.getUserVM().setOnUserListener(this);
         return mBinding.getRoot();
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == RC_SAVE) {
-            if (resultCode == Activity.RESULT_OK) {
-                Log.d(TAG, "SAVE: OK");
-                Toast.makeText(getActivity(), "Credentials saved", Toast.LENGTH_SHORT).show();
-            } else {
-                Log.e(TAG, "SAVE: Canceled by user");
-            }
+    public void onFailed(int code) {
+        switch (code) {
+            case 400:
+                Utils.showAlert(getActivity(), "Falha ao criar", "Email já registrado ou campos em branco");
+                break;
+            default:
+                Utils.showAlert(getActivity(), "Falha no login", "Ocorreu um erro inesperado, por favor tente" +
+                        " novamente mais tarde ou entre em contato com o suporte.");
+                break;
         }
-
-    }
-
-    private void saveCredentialsGoogle() {
-
-        credential = new Credential.Builder(mBinding.getUserVM().getUserEmail())
-                .setPassword(mBinding.getUserVM().getUserPassword())
-                .build();
-
-
-        Auth.CredentialsApi.save(mCredentialsClient, credential).setResultCallback(new ResolvingResultCallbacks<Status>(getActivity(), RC_SAVE) {
-            @Override
-            public void onSuccess(@NonNull Status status) {
-                Log.d(TAG, "SAVE: OK");
-                Toast.makeText(getActivity(), "Credentials saved", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onUnresolvableFailure(@NonNull Status status) {
-                Toast.makeText(getActivity(), "Save failed", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     @Override
-    public void onConnected(@Nullable Bundle bundle) {
-
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }
-
-    @Override
-    public void registerUserFailed() {
-
-    }
-
-    @Override
-    public void registerUserSuccess() {
-        saveCredentialsGoogle();
+    public void onSuccess(String customerKey, String accessToken) {
+        getFragmentManager()
+                .beginTransaction()
+                .replace(R.id.container, ListMerchantsFragment.newInstance(customerKey, accessToken))
+                .commit();
     }
 }

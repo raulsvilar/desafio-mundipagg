@@ -7,4 +7,7 @@
     <string name="name">Nome</string>
     <string name="company">Empresa</string>
     <string name="sign_in">Entrar</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
