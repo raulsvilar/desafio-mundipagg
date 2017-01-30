@@ -10,4 +10,14 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="buy">Comprar</string>
+    <string name="Installment">Parcelas</string>
+    <string name="value">Valor</string>
+
+    <string-array name="Brands">
+        <item>Visa</item>
+        <item>MarterCard</item>
+        <item>Elo</item>
+        <item>Hipercard</item>
+    </string-array>
 </resources>

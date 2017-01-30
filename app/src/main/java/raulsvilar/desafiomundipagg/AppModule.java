@@ -7,8 +7,11 @@ import android.preference.PreferenceManager;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Named;
+
 import dagger.Module;
 import dagger.Provides;
+import raulsvilar.desafiomundipagg.data.models.Transaction;
 import raulsvilar.desafiomundipagg.views.adapters.MerchantAdapter;
 import raulsvilar.desafiomundipagg.data.models.Merchant;
 import raulsvilar.desafiomundipagg.data.models.User;
@@ -49,11 +52,27 @@ public class AppModule {
     }
 
     @Provides
+    @Named("transactionRetrofit")
+    public Retrofit provideTransactionRetrofit() {
+        return new Retrofit.Builder()
+                .addConverterFactory(GsonConverterFactory.create())
+                .baseUrl("https://sandbox.mundipaggone.com/")
+                .build();
+    }
+
+    @Provides
+    public Transaction provideTransaction() {
+        return new Transaction();
+    }
+
+    @Provides
+    @Named("Dataset")
     public List<Merchant> provideMerchantsDataset() {
         return new ArrayList<>();
     }
 
     @Provides
+    @Named("MerchantAdapter")
     public MerchantAdapter provideMerchantAdapter() {
         return new MerchantAdapter();
     }

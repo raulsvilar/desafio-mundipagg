@@ -11,6 +11,15 @@ public class CreditCard {
     private int expMonth;
     private int expYear;
     private String brand;
+    private int cvv;
+
+    public int getCvv() {
+        return cvv;
+    }
+
+    public void setCvv(int cvv) {
+        this.cvv = cvv;
+    }
 
     public String getNumber() {
         return number;
@@ -24,8 +33,8 @@ public class CreditCard {
         return holderName;
     }
 
-    public void setPrinted_name(String printed_name) {
-        this.holderName = printed_name;
+    public void setHolderName(String holderName) {
+        this.holderName = holderName;
     }
 
     public int getExpMonth() {

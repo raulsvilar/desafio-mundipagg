@@ -17,6 +17,7 @@ import org.parceler.Parcels;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import raulsvilar.desafiomundipagg.App;
 import raulsvilar.desafiomundipagg.R;
@@ -40,7 +41,7 @@ public class ListMerchantsFragment extends Fragment
     private String customerKey;
 
     private FragmentListMerchantsBinding mBinding;
-    @Inject MerchantAdapter mAdapter;
+    @Inject @Named("MerchantAdapter") MerchantAdapter mAdapter;
     private final String TAG = getClass().getSimpleName();
 
     public ListMerchantsFragment() {

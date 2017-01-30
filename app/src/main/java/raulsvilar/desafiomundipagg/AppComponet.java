@@ -1,6 +1,7 @@
 package raulsvilar.desafiomundipagg;
 
 import dagger.Component;
+import raulsvilar.desafiomundipagg.viewmodels.TransactionViewModel;
 import raulsvilar.desafiomundipagg.views.adapters.MerchantAdapter;
 import raulsvilar.desafiomundipagg.views.fragments.ListMerchantsFragment;
 import raulsvilar.desafiomundipagg.viewmodels.MerchantViewModel;
@@ -15,5 +16,6 @@ public interface AppComponet {
     public void inject(UserViewModel userViewModel);
     public void inject(MerchantViewModel merchantViewModel);
     public void inject(MerchantAdapter merchantAdapter);
+    public void inject(TransactionViewModel transactionViewModel);
     public void inject(ListMerchantsFragment listMerchantsFragment);
 }
