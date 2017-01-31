@@ -21,6 +21,19 @@ public class CreditCard {
     @SerializedName("SecurityCode")
     private int cvv;
 
+    public CreditCard() {
+
+    }
+
+    public CreditCard(String number, String holderName, int expMonth, int expYear, String brand, int cvv) {
+        this.number = number;
+        this.holderName = holderName;
+        this.expMonth = expMonth;
+        this.expYear = expYear;
+        this.brand = brand;
+        this.cvv = cvv;
+    }
+
     public int getCvv() {
         return cvv;
     }

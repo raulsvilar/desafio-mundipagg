@@ -11,6 +11,7 @@ import javax.inject.Named;
 
 import dagger.Module;
 import dagger.Provides;
+import raulsvilar.desafiomundipagg.data.models.Buyer;
 import raulsvilar.desafiomundipagg.data.models.Transaction;
 import raulsvilar.desafiomundipagg.views.adapters.MerchantAdapter;
 import raulsvilar.desafiomundipagg.data.models.Merchant;
@@ -68,6 +69,11 @@ public class AppModule {
     @Provides
     public List<Merchant> provideMerchantsDataset() {
         return new ArrayList<>();
+    }
+
+    @Provides
+    public Buyer provideBuyer() {
+        return new Buyer();
     }
 
     @Provides

@@ -2,6 +2,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="merchantVM"
+            type="raulsvilar.desafiomundipagg.viewmodels.MerchantViewModel"/>
+    </data>
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -10,7 +17,15 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
+            android:visibility="@{!merchantVM.loadingService ? View.VISIBLE : View.GONE}"
             android:layout_height="match_parent"/>
 
+        <ProgressBar
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressBar3"
+            android:visibility="@{merchantVM.loadingService ? View.VISIBLE : View.GONE}"/>
     </FrameLayout>
 </layout>

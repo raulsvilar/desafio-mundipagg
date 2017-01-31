@@ -23,7 +23,10 @@ import retrofit2.Retrofit;
 
 public class UserViewModel extends BaseObservable implements Callback<User>{
 
-    private final static String REFRESH_TOKEN = "refresh_token";
+    public final static String USER_REFRESH_TOKEN = "refresh_token";
+    public final static String USER_NAME = "user_name";
+    public final static String USER_EMAIL = "user_email";
+
 
     private String TAG = getClass().getSimpleName();
     @Inject Retrofit retrofit;
@@ -39,7 +42,9 @@ public class UserViewModel extends BaseObservable implements Callback<User>{
         setLoading(false);
         if (response.code() <= 204) {
             mUser = response.body();
-            sharedPreferences.edit().putString(REFRESH_TOKEN, mUser.getRefreshToken()).apply();
+            sharedPreferences.edit().putString(USER_REFRESH_TOKEN, mUser.getRefreshToken()).apply();
+            sharedPreferences.edit().putString(USER_EMAIL, mUser.getEmail()).apply();
+            sharedPreferences.edit().putString(USER_NAME, mUser.getName()).apply();
             Log.d(TAG, response.body().toString());
             mCallback.onSuccess(mUser.getCustomerKey(), mUser.getAccessToken());
         } else if (!withRefresh) {
@@ -125,7 +130,7 @@ public class UserViewModel extends BaseObservable implements Callback<User>{
     }
 
     public void restoreUser() {
-        String refresh = sharedPreferences.getString(REFRESH_TOKEN, null);
+        String refresh = sharedPreferences.getString(USER_REFRESH_TOKEN, null);
         if (refresh != null) {
             setLoading(true);
             withRefresh = true;

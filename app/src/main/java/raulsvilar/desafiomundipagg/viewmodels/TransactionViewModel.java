@@ -1,5 +1,6 @@
 package raulsvilar.desafiomundipagg.viewmodels;
 
+import android.content.SharedPreferences;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.util.Log;
@@ -18,27 +19,32 @@ import okhttp3.ResponseBody;
 import raulsvilar.desafiomundipagg.App;
 import raulsvilar.desafiomundipagg.data.models.CreditCard;
 import raulsvilar.desafiomundipagg.data.models.Transaction;
+import raulsvilar.desafiomundipagg.data.models.User;
 import raulsvilar.desafiomundipagg.service.TransactionService;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
+import static raulsvilar.desafiomundipagg.R.string.email;
+
 public class TransactionViewModel extends BaseObservable implements Callback<ResponseBody> {
 
     private List<CreditCard> cardList;
     @Inject Transaction transaction;
+    @Inject SharedPreferences sharedPreferences;
     private TransactionService service;
     @Inject @Named("transactionRetrofit")
     Retrofit retrofit;
     private String merchantKey;
     private String value;
     private String installments;
+    private boolean loadingTransaction;
     private OnTransactionListener mCallback;
 
     public interface OnTransactionListener{
         void onSuccess();
-        void onFailed();
+        void onFailed(int code);
     }
 
     public TransactionViewModel(String merchantKey) {
@@ -50,6 +56,16 @@ public class TransactionViewModel extends BaseObservable implements Callback<Res
 
     public void setOnTransactionListener(OnTransactionListener listener) {
         mCallback = listener;
+    }
+
+    @Bindable
+    public boolean isLoadingTransaction() {
+        return loadingTransaction;
+    }
+
+    public void setLoadingTransaction(boolean loadingTransaction) {
+        this.loadingTransaction = loadingTransaction;
+        notifyPropertyChanged(BR.loadingTransaction);
     }
 
     @Bindable
@@ -74,14 +90,19 @@ public class TransactionViewModel extends BaseObservable implements Callback<Res
     }
 
     public void buy() {
-        BigDecimal value = new BigDecimal(getValue());
-        value = value.multiply(BigDecimal.valueOf(100));
-        transaction.setSale(value.toBigInteger().intValue(),
-                Integer.parseInt(getInstallments()), cardList);
-        sendTransaction();
+        if (getValue() != null && getInstallments() != null) {
+            BigDecimal value = new BigDecimal(getValue());
+            value = value.multiply(BigDecimal.valueOf(100));
+            String email = sharedPreferences.getString(UserViewModel.USER_NAME, null);
+            String name = sharedPreferences.getString(UserViewModel.USER_EMAIL, null);
+            transaction.setSale(value.toBigInteger().intValue(),
+                    Integer.parseInt(getInstallments()), cardList, name, email);
+            sendTransaction();
+        } else mCallback.onFailed(0);
     }
 
     private void sendTransaction() {
+        setLoadingTransaction(true);
         Log.d("TransactionViewModel", new Gson().toJson(transaction));
         service.sendTransaction(merchantKey, transaction).enqueue(this);
     }
@@ -92,13 +113,15 @@ public class TransactionViewModel extends BaseObservable implements Callback<Res
 
     @Override
     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+        setLoadingTransaction(false);
         if(response.code() <= 204) {
             mCallback.onSuccess();
-        } else mCallback.onFailed();
+        } else mCallback.onFailed(response.code());
     }
 
     @Override
     public void onFailure(Call<ResponseBody> call, Throwable t) {
-        mCallback.onFailed();
+        setLoadingTransaction(false);
+        mCallback.onFailed(503);
     }
 }

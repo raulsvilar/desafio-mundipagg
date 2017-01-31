@@ -2,6 +2,7 @@ package raulsvilar.desafiomundipagg.views.fragments;
 
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -21,7 +22,8 @@ import raulsvilar.desafiomundipagg.data.models.CreditCard;
 import raulsvilar.desafiomundipagg.databinding.FragmentTransactionBinding;
 import raulsvilar.desafiomundipagg.viewmodels.TransactionViewModel;
 
-public class TransactionFragment extends Fragment implements TransactionViewModel.OnTransactionListener{
+public class TransactionFragment extends Fragment
+        implements TransactionViewModel.OnTransactionListener{
 
     private static final String MERCHANT_KEY = "merchant_key";
     private String merchantKey;
@@ -79,14 +81,12 @@ public class TransactionFragment extends Fragment implements TransactionViewMode
                     String cardNumber = data.getStringExtra(CreditCardUtils.EXTRA_CARD_NUMBER);
                     String expiry = data.getStringExtra(CreditCardUtils.EXTRA_CARD_EXPIRY);
                     String cvv = data.getStringExtra(CreditCardUtils.EXTRA_CARD_CVV);
-                    CreditCard card = new CreditCard();
-                    card.setNumber(cardNumber);
-                    card.setHolderName(cardHolderName);
                     String[] exp = expiry.split("/");
-                    card.setExpMonth(Integer.parseInt(exp[0]));
-                    card.setExpYear(Integer.parseInt(exp[1]));
-                    card.setCvv(Integer.parseInt(cvv));
-                    card.setBrand(brand);
+
+                    CreditCard card = new CreditCard(cardNumber, cardHolderName,
+                            Integer.parseInt(exp[0]), Integer.parseInt(exp[1]), brand,
+                            Integer.parseInt(cvv));
+
                     mBinding.getTransactionVM().addCard(card);
                     mBinding.getTransactionVM().buy();
                 }
@@ -96,11 +96,30 @@ public class TransactionFragment extends Fragment implements TransactionViewMode
 
     @Override
     public void onSuccess() {
-        Utils.showAlert(getActivity(),"Tranção","Transação efetuada com sucesso!");
+        Utils.createAlert(getActivity(),"Transação","Transação efetuada com sucesso!")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        getFragmentManager().popBackStackImmediate();
+                    }
+                }).show();
     }
 
     @Override
-    public void onFailed() {
-        Utils.showAlert(getActivity(),"Tranção","Transação falhou!");
+    public void onFailed(int code) {
+        switch (code) {
+            case 0:
+                Utils.createAlert(getActivity(),"Transação","Preencha todos os campos!")
+                        .setPositiveButton("OK", null).show();
+                break;
+            default:
+                Utils.createAlert(getActivity(),"Transação","Transação falhou!\n"+code)
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                getFragmentManager().popBackStackImmediate();
+                            }
+                        }).show();
+        }
     }
 }

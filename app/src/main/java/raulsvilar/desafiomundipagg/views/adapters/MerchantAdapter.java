@@ -51,6 +51,11 @@ public class MerchantAdapter extends RecyclerView.Adapter<MerchantAdapter.ViewHo
         notifyItemRangeInserted(i, merchants.size());
     }
 
+    public void setDataset(List<Merchant> newDataset) {
+        dataset = newDataset;
+        notifyDataSetChanged();
+    }
+
     public List<Merchant> getMerchants() {
         return dataset;
     }

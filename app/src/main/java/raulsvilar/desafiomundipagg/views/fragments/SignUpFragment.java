@@ -41,11 +41,13 @@ public class SignUpFragment extends Fragment implements UserViewModel.OnUserList
     public void onFailed(int code) {
         switch (code) {
             case 400:
-                Utils.showAlert(getActivity(), "Falha ao criar", "Email já registrado ou campos em branco");
+                Utils.createAlert(getActivity(), "Falha ao criar", "Email já registrado ou campos em branco")
+                        .setPositiveButton("OK", null).show();
                 break;
             default:
-                Utils.showAlert(getActivity(), "Falha no login", "Ocorreu um erro inesperado, por favor tente" +
-                        " novamente mais tarde ou entre em contato com o suporte.");
+                Utils.createAlert(getActivity(), "Falha no login", "Ocorreu um erro inesperado, por favor tente" +
+                        " novamente mais tarde ou entre em contato com o suporte.\nCódigo "+code)
+                        .setPositiveButton("OK", null).show();
                 break;
         }
     }

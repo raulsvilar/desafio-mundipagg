@@ -45,14 +45,17 @@ public class SignInFragment extends Fragment implements UserViewModel.OnUserList
         switch (code) {
 
             case 400:
-                Utils.showAlert(getActivity(), "Falha no login", "Usuário e senha são campos obrigatórios.");
+                Utils.createAlert(getActivity(), "Falha no login", "Usuário e senha são campos obrigatórios.")
+                        .setPositiveButton("OK", null).show();
                 break;
             case 401:
-                Utils.showAlert(getActivity(), "Falha no login", "Usuário e/ou senha inválidos.");
+                Utils.createAlert(getActivity(), "Falha no login", "Usuário e/ou senha inválidos.")
+                        .setPositiveButton("OK", null).show();
                 break;
             default:
-                Utils.showAlert(getActivity(), "Falha no login", "Ocorreu um erro inesperado, por favor tente" +
-                        " novamente mais tarde ou entre em contato com o suporte.");
+                Utils.createAlert(getActivity(), "Falha no login", "Ocorreu um erro inesperado, por favor tente" +
+                        " novamente mais tarde ou entre em contato com o suporte.\nCódigo "+code)
+                        .setPositiveButton("OK", null).show();
                 break;
         }
     }

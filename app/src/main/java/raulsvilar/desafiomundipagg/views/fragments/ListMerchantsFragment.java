@@ -69,15 +69,11 @@ public class ListMerchantsFragment extends Fragment
             customerKey = getArguments().getString(CUSTOMER_KEY);
         }
         if (savedInstanceState != null) {
-            mAdapter.addMerchants(
+            mAdapter.setDataset(
                     (List<Merchant>) Parcels.unwrap(
                             savedInstanceState.getParcelable(MERCHANTS_SAVED)));
-        } else {
-            mAdapter.setOnMerchantSelected(this);
-            MerchantViewModel merchantViewModel = new MerchantViewModel();
-            merchantViewModel.setOnMerchantsListener(this);
-            merchantViewModel.searchMerchants(customerKey, accessToken, "");
         }
+        mAdapter.setOnMerchantSelected(this);
     }
 
     @Override
@@ -88,6 +84,11 @@ public class ListMerchantsFragment extends Fragment
                 container, false);
 
         mBinding.recyclerView.setHasFixedSize(true);
+        mBinding.setMerchantVM(new MerchantViewModel());
+        mBinding.getMerchantVM().setOnMerchantsListener(this);
+        if (savedInstanceState == null && mAdapter.getItemCount() == 0) {
+            mBinding.getMerchantVM().searchMerchants(customerKey, accessToken, "");
+        }
         mBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mBinding.recyclerView.setAdapter(mAdapter);
         return mBinding.getRoot();
