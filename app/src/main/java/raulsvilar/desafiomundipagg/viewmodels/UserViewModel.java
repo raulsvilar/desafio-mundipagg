@@ -13,6 +13,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import okhttp3.ResponseBody;
 import raulsvilar.desafiomundipagg.App;
 import raulsvilar.desafiomundipagg.data.models.User;
 import raulsvilar.desafiomundipagg.service.UserService;
@@ -26,6 +27,7 @@ public class UserViewModel extends BaseObservable implements Callback<User>{
     public final static String USER_REFRESH_TOKEN = "refresh_token";
     public final static String USER_NAME = "user_name";
     public final static String USER_EMAIL = "user_email";
+    public static final String USER_ACCESS_TOKEN = "user_access_token";
 
 
     private String TAG = getClass().getSimpleName();
@@ -36,6 +38,22 @@ public class UserViewModel extends BaseObservable implements Callback<User>{
     private boolean loading;
     private boolean withRefresh;
     private OnUserListener mCallback;
+    private OnUserLogout mCallbackLogout;
+
+    public interface OnUserListener {
+        void onFailed(int code);
+        void onSuccess(String customerKey, String accessToken);
+    }
+
+    public interface OnUserLogout {
+        void onLogout();
+        void onLogoutFail();
+    }
+
+    public UserViewModel() {
+        App.getComponent().inject(this);
+        userService = retrofit.create(UserService.class);
+    }
 
     @Override
     public void onResponse(Call<User> call, Response<User> response) {
@@ -45,6 +63,7 @@ public class UserViewModel extends BaseObservable implements Callback<User>{
             sharedPreferences.edit().putString(USER_REFRESH_TOKEN, mUser.getRefreshToken()).apply();
             sharedPreferences.edit().putString(USER_EMAIL, mUser.getEmail()).apply();
             sharedPreferences.edit().putString(USER_NAME, mUser.getName()).apply();
+            sharedPreferences.edit().putString(USER_ACCESS_TOKEN, mUser.getAccessToken()).apply();
             Log.d(TAG, response.body().toString());
             mCallback.onSuccess(mUser.getCustomerKey(), mUser.getAccessToken());
         } else if (!withRefresh) {
@@ -58,19 +77,29 @@ public class UserViewModel extends BaseObservable implements Callback<User>{
         mCallback.onFailed(503);
     }
 
-    public interface OnUserListener {
-        void onFailed(int code);
-        void onSuccess(String customerKey, String accessToken);
-    }
+    public void logout(String access) {
+        userService.logoutUser(access).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if(response.code() <=204) {
+                    sharedPreferences.edit().clear().apply();
+                    mCallbackLogout.onLogout();
+                } else mCallbackLogout.onLogoutFail();
+            }
 
-    public UserViewModel() {
-        App.getComponent().inject(this);
-        userService = retrofit.create(UserService.class);
-        restoreUser();
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                mCallbackLogout.onLogoutFail();
+            }
+        });
     }
 
     public void setOnUserListener(@NonNull OnUserListener listener) {
         mCallback = listener;
+    }
+
+    public void setOnUserLogoutListener(OnUserLogout listener){
+        mCallbackLogout = listener;
     }
 
     @Bindable

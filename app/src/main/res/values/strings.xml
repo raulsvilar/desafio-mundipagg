@@ -8,11 +8,23 @@
     <string name="company">Empresa</string>
     <string name="sign_in">Entrar</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="buy">Comprar</string>
     <string name="Installment">Parcelas</string>
     <string name="value">Valor</string>
+    <string name="logout">Sair</string>
+    <string name="fail_logout">Falha ao deslogar, por favor tente novamente.</string>
+    <string name="ok">OK</string>
+    <string name="service_error">"Ocorreu um erro inesperado, por favor tente novamente mais tarde ou entre em contato com o suporte.\nCódigo "</string>
+    <string name="login_fail">Falha no login</string>
+    <string name="required_user_password">Usuário e senha são campos obrigatórios.</string>
+    <string name="invalid_user_password">Usuário e/ou senha inválidos.</string>
+    <string name="fail_create_user">Erro ao criar usuário</string>
+    <string name="registered_email_blank">Email já registrado ou campos em branco</string>
+    <string name="transaction">Transação</string>
+    <string name="success_transaction">Transação efetuada com sucesso!</string>
+    <string name="blank_fields">Preencha todos os campos!</string>
+    <string name="fail_transaction">Transação falhou!\n</string>
 
     <string-array name="Brands">
         <item>Visa</item>

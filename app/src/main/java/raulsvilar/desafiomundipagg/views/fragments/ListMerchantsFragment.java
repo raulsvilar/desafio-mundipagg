@@ -108,6 +108,8 @@ public class ListMerchantsFragment extends Fragment
     @Override
     public void onGetMerchantsFailed(int code) {
         Log.e(TAG, "Erro: "+code);
+        Utils.createAlert(getActivity(),"Erro", getString(R.string.service_error)+code)
+                .setPositiveButton(getString(R.string.ok), null).show();
     }
 
     @Override

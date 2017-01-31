@@ -13,6 +13,7 @@ import dagger.Module;
 import dagger.Provides;
 import raulsvilar.desafiomundipagg.data.models.Buyer;
 import raulsvilar.desafiomundipagg.data.models.Transaction;
+import raulsvilar.desafiomundipagg.viewmodels.UserViewModel;
 import raulsvilar.desafiomundipagg.views.adapters.MerchantAdapter;
 import raulsvilar.desafiomundipagg.data.models.Merchant;
 import raulsvilar.desafiomundipagg.data.models.User;
@@ -79,5 +80,10 @@ public class AppModule {
     @Provides
     public MerchantAdapter provideMerchantAdapter() {
         return new MerchantAdapter();
+    }
+
+    @Provides
+    public UserViewModel provideUserViewModel() {
+        return new UserViewModel();
     }
 }

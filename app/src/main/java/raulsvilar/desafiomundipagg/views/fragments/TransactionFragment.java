@@ -96,8 +96,9 @@ public class TransactionFragment extends Fragment
 
     @Override
     public void onSuccess() {
-        Utils.createAlert(getActivity(),"Transação","Transação efetuada com sucesso!")
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        Utils.createAlert(getActivity(), getString(R.string.transaction),
+                          getString(R.string.success_transaction))
+                .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         getFragmentManager().popBackStackImmediate();
@@ -109,12 +110,14 @@ public class TransactionFragment extends Fragment
     public void onFailed(int code) {
         switch (code) {
             case 0:
-                Utils.createAlert(getActivity(),"Transação","Preencha todos os campos!")
-                        .setPositiveButton("OK", null).show();
+                Utils.createAlert(getActivity(), getString(R.string.transaction),
+                                  getString(R.string.blank_fields))
+                        .setPositiveButton(getString(R.string.ok), null).show();
                 break;
             default:
-                Utils.createAlert(getActivity(),"Transação","Transação falhou!\n"+code)
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                Utils.createAlert(getActivity(), getString(R.string.transaction),
+                                  getString(R.string.fail_transaction)+code)
+                        .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 getFragmentManager().popBackStackImmediate();

@@ -17,10 +17,6 @@ import raulsvilar.desafiomundipagg.R;
 import raulsvilar.desafiomundipagg.databinding.MerchantAdapterBinding;
 import raulsvilar.desafiomundipagg.data.models.Merchant;
 
-/**
- * Created by raulsvilar on 30/01/17.
- */
-
 public class MerchantAdapter extends RecyclerView.Adapter<MerchantAdapter.ViewHolder> {
 
     public interface OnMerchantSelected {
@@ -83,7 +79,6 @@ public class MerchantAdapter extends RecyclerView.Adapter<MerchantAdapter.ViewHo
 
         @Override
         public void onClick(View v) {
-            Log.d("MerchantAdapter", "Clicouu");
             mCallback.onSelected(mBinding.getMerchant().getMerchantKey());
         }
     }
