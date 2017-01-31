@@ -1,16 +1,24 @@
 package raulsvilar.desafiomundipagg.data.models;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by raulsvilar on 19/01/17.
  */
 
 public class CreditCard {
 
+    @SerializedName("CreditCardNumber")
     private String number;
+    @SerializedName("HolderName")
     private String holderName;
+    @SerializedName("ExpMonth")
     private int expMonth;
+    @SerializedName("ExpYear")
     private int expYear;
+    @SerializedName("CreditCardBrand")
     private String brand;
+    @SerializedName("SecurityCode")
     private int cvv;
 
     public int getCvv() {

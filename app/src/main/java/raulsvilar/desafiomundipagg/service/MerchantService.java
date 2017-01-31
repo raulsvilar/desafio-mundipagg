@@ -14,7 +14,7 @@ import retrofit2.http.QueryMap;
 
 public interface MerchantService {
     @GET("{customerKey}/merchants")
-    @Headers("Issandboxenabled: true")
+    @Headers("IsSandboxEnabled: true")
     Call<MerchantsResponse> searchMerchant(
             @Path("customerKey") @NonNull String customerKey,
             @Header("Authorization") String token,

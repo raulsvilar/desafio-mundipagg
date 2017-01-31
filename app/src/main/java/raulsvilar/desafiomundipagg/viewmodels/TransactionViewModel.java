@@ -2,8 +2,10 @@ package raulsvilar.desafiomundipagg.viewmodels;
 
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
+import android.util.Log;
 
 import com.android.databinding.library.baseAdapters.BR;
+import com.google.gson.Gson;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -80,6 +82,7 @@ public class TransactionViewModel extends BaseObservable implements Callback<Res
     }
 
     private void sendTransaction() {
+        Log.d("TransactionViewModel", new Gson().toJson(transaction));
         service.sendTransaction(merchantKey, transaction).enqueue(this);
     }
 

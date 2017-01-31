@@ -41,7 +41,7 @@ public class ListMerchantsFragment extends Fragment
     private String customerKey;
 
     private FragmentListMerchantsBinding mBinding;
-    @Inject @Named("MerchantAdapter") MerchantAdapter mAdapter;
+    @Inject MerchantAdapter mAdapter;
     private final String TAG = getClass().getSimpleName();
 
     public ListMerchantsFragment() {
@@ -111,6 +111,8 @@ public class ListMerchantsFragment extends Fragment
 
     @Override
     public void onSelected(String merchantKey) {
-        Utils.changeFragment(getFragmentManager(), R.id.container, new TransactionFragment(), false, null);
+        Utils.changeFragment(getFragmentManager(), R.id.container,
+                TransactionFragment.newInstance(merchantKey), true,
+                "ListMerchantsFragment");
     }
 }

@@ -66,13 +66,11 @@ public class AppModule {
     }
 
     @Provides
-    @Named("Dataset")
     public List<Merchant> provideMerchantsDataset() {
         return new ArrayList<>();
     }
 
     @Provides
-    @Named("MerchantAdapter")
     public MerchantAdapter provideMerchantAdapter() {
         return new MerchantAdapter();
     }

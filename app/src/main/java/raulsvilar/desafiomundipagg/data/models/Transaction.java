@@ -1,9 +1,13 @@
 package raulsvilar.desafiomundipagg.data.models;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Transaction {
+
+    @SerializedName("CreditCardTransactionCollection")
     private List<Item> creditCardTransactionCollection;
 
     public Transaction() {
@@ -16,14 +20,17 @@ public class Transaction {
         }
     }
     private class Item {
-        int AmountInCents;
+        @SerializedName("AmountInCents")
+        int amountInCents;
+        @SerializedName("CreditCard")
         CreditCard creditCard;
-        int InstallmentCount;
+        @SerializedName("InstallmentCount")
+        int installmentCount;
 
         Item(int amountInCents, CreditCard creditCard, int installmentCount) {
-            AmountInCents = amountInCents;
+            this.amountInCents = amountInCents;
             this.creditCard = creditCard;
-            InstallmentCount = installmentCount;
+            this.installmentCount = installmentCount;
         }
     }
 }

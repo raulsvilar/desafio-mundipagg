@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import raulsvilar.desafiomundipagg.App;
 import raulsvilar.desafiomundipagg.R;
@@ -28,7 +27,7 @@ public class MerchantAdapter extends RecyclerView.Adapter<MerchantAdapter.ViewHo
         void onSelected(String merchantKey);
     }
 
-    @Inject @Named("Dataset")
+    @Inject
     List<Merchant> dataset;
     OnMerchantSelected mCallback;
 
